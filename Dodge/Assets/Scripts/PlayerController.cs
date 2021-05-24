@@ -4,34 +4,48 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody playerRigidbody;
-    public float speed = 8f;
-    void Start()
-    {
-        // GetComponent 내 게임 오브젝트에서 원하는 타입의 컴포넌트를 찾아오는 메서드
-        playerRigidbody = GetComponent<Rigidbody>();
-    }
+	private Rigidbody playerRigidbody;
+	public HPBar hpBar;
 
-    void Update()
-    {
-        float xInput = Input.GetAxis("Horizontal");
-        float zInput = Input.GetAxis("Vertical");
+	public int hp = 100;
+	public float speed = 8f;
+	
+	void Start()
+	{
+		// GetComponent 내 게임 오브젝트에서 원하는 타입의 컴포넌트를 찾아오는 메서드
+		playerRigidbody = GetComponent<Rigidbody>();
+	}
 
-        float xSpeed = xInput * speed;
-        float zSpeed = zInput * speed;
+	void Update()
+	{
+		float xInput = Input.GetAxis("Horizontal");
+		float zInput = Input.GetAxis("Vertical");
 
-        Vector3 newVelocity = new Vector3(xSpeed, 0f, zSpeed);
+		float xSpeed = xInput * speed;
+		float zSpeed = zInput * speed;
 
-        playerRigidbody.velocity = newVelocity;
-        gameObject.transform.LookAt(transform.position + newVelocity);
-    }
+		Vector3 newVelocity = new Vector3(xSpeed, 0f, zSpeed);
 
-    public void Die()
-    {
-        gameObject.SetActive(false);
+		playerRigidbody.velocity = newVelocity;
+		gameObject.transform.LookAt(transform.position + newVelocity);
+	}
 
-        GameManager gameManager = FindObjectOfType<GameManager>();
+	public void getDamage(int damage)
+	{
+		hp -= damage;
+		hpBar.setHP(hp);
+		if (hp <= 0)
+		{
+			Die();
+		}
+	}
 
-        gameManager.EndGame();
+	void Die()
+	{
+		gameObject.SetActive(false);
+
+		GameManager gameManager = FindObjectOfType<GameManager>();
+
+		gameManager.EndGame();
 	}
 }
