@@ -386,6 +386,8 @@ MonoBehaviour:
   level: {fileID: 183489352}
   bulletSpawnerPrefab: {fileID: 8576804959927849707, guid: 28d12e7b45e627041a73afd112243425,
     type: 3}
+  itemPrefab: {fileID: 8681719118077724409, guid: f9c9e86ad22445243a97a9b9edb01714,
+    type: 3}
 --- !u!4 &137463031
 Transform:
   m_ObjectHideFlags: 0

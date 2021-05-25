@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
 
 	public GameObject level; // 불릿 등 레벨 수정할 변수
 	public GameObject bulletSpawnerPrefab;
+	public GameObject itemPrefab;
+	int prevItemCheck;
+
 	Vector3[] bulletSpawners = new Vector3[4];
 	int spawnCounter;
 
@@ -51,6 +54,7 @@ public class GameManager : MonoBehaviour
 		bulletSpawners[3].z = -8f;
 
 		StartCoroutine("createBulletSpawner");
+		StartCoroutine("createItemPrefab");
 	}
 
 	void Update()
@@ -59,6 +63,17 @@ public class GameManager : MonoBehaviour
 		{
 			surviveTime += Time.deltaTime;
 			timeText.text = "Time: " + (int)surviveTime;
+			/*
+			if (surviveTime % 5f <= 0.01f && prevItemCheck == 4)
+			{
+				Vector3 randomPos = new Vector3(Random.Range(-8f, 8f), 1f, Random.Range(-8f, 8f));
+
+				GameObject item = Instantiate(itemPrefab, randomPos, Quaternion.identity);
+				item.transform.parent = level.transform;
+				item.transform.localPosition = randomPos;
+			}
+			prevItemCheck = (int)(surviveTime % 5f);
+			*/
 		}
 		else
 		{
@@ -66,6 +81,19 @@ public class GameManager : MonoBehaviour
 			{
 				SceneManager.LoadScene("SampleScene");
 			}
+		}
+	}
+
+	IEnumerator createItemPrefab()
+	{
+		while (true)
+		{
+			yield return new WaitForSeconds(5f);
+			Vector3 randomPos = new Vector3(Random.Range(-6f, 6f), 1f, Random.Range(-6f, 6f));
+
+			GameObject item = Instantiate(itemPrefab, randomPos, Quaternion.identity);
+			item.transform.parent = level.transform;
+			item.transform.localPosition = randomPos; // 로컬 좌표계로 설정
 		}
 	}
 

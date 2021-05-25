@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 
 	public int hp = 100;
 	public float speed = 8f;
-	
+
 	void Start()
 	{
 		// GetComponent 내 게임 오브젝트에서 원하는 타입의 컴포넌트를 찾아오는 메서드
@@ -38,6 +38,16 @@ public class PlayerController : MonoBehaviour
 		{
 			Die();
 		}
+	}
+
+	public void GetHeal(int heal)
+	{
+		hp += heal;
+		if (hp >= 100)
+		{
+			hp = 100;
+		}
+		hpBar.setHP(hp);
 	}
 
 	void Die()

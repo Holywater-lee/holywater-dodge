@@ -6,15 +6,6 @@ using UnityEngine.UI;
 public class HPBar : MonoBehaviour
 {
 	public Image hpBar;
-	void Start()
-	{
-
-	}
-
-	void Update()
-	{
-
-	}
 
 	public void setHP(int hp)
 	{
