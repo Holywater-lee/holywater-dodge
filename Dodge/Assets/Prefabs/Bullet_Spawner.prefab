@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8576804959927849706}
   m_Layer: 0
   m_Name: Bullet_Spawner
-  m_TagString: Untagged
+  m_TagString: BulletSpawner
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

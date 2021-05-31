@@ -6,6 +6,10 @@ public class PlayerController : MonoBehaviour
 {
 	private Rigidbody playerRigidbody;
 	public HPBar hpBar;
+	public GameObject playerBulletPrefab;
+
+	float timerAfterSpawn = 0f;
+	float spawnRate = 0.2f;
 
 	public int hp = 100;
 	public float speed = 8f;
@@ -25,9 +29,27 @@ public class PlayerController : MonoBehaviour
 		float zSpeed = zInput * speed;
 
 		Vector3 newVelocity = new Vector3(xSpeed, 0f, zSpeed);
-
 		playerRigidbody.velocity = newVelocity;
-		gameObject.transform.LookAt(transform.position + newVelocity);
+
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+		Plane groupPlane = new Plane(Vector3.up, Vector3.zero);
+		float rayLength;
+		if(groupPlane.Raycast(ray, out rayLength))
+		{
+			Vector3 pointToLook = ray.GetPoint(rayLength);
+			Debug.Log(pointToLook);
+			transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z)); ;
+		}
+
+		//gameObject.transform.LookAt(transform.position + newVelocity);
+
+		timerAfterSpawn += Time.deltaTime;
+		if (Input.GetButton("Fire1") && timerAfterSpawn >= spawnRate)
+		{
+			timerAfterSpawn = 0f;
+			var bullet = Instantiate(playerBulletPrefab, transform.position, transform.rotation);
+		}
 	}
 
 	public void getDamage(int damage)

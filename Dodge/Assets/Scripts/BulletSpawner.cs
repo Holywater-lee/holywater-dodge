@@ -7,6 +7,7 @@ public class BulletSpawner : MonoBehaviour
     public GameObject bulletPrefab;
     public float spawnRateMin = 0.5f;
     public float spawnRateMax = 3f;
+    public float hp = 100f;
 
     private Transform target;
     float spawnRate;
@@ -24,6 +25,15 @@ public class BulletSpawner : MonoBehaviour
     void Update()
     {
         CreateBullet();
+    }
+
+    public void getDamage(int damage)
+    {
+        hp -= damage;
+        if (hp <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     void CreateBullet()
