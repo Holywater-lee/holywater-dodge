@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 	private Rigidbody playerRigidbody;
+	Transform tr;
 	public HPBar hpBar;
 	public GameObject playerBulletPrefab;
 
@@ -18,6 +19,7 @@ public class PlayerController : MonoBehaviour
 	{
 		// GetComponent 내 게임 오브젝트에서 원하는 타입의 컴포넌트를 찾아오는 메서드
 		playerRigidbody = GetComponent<Rigidbody>();
+		tr = GetComponent<Transform>();
 	}
 
 	void Update()
@@ -31,15 +33,15 @@ public class PlayerController : MonoBehaviour
 		Vector3 newVelocity = new Vector3(xSpeed, 0f, zSpeed);
 		playerRigidbody.velocity = newVelocity;
 
+		RaycastHit hit = new RaycastHit();
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-		Plane groupPlane = new Plane(Vector3.up, Vector3.zero);
-		float rayLength;
-		if(groupPlane.Raycast(ray, out rayLength))
+		if (Physics.Raycast(ray.origin, ray.direction, out hit))
 		{
-			Vector3 pointToLook = ray.GetPoint(rayLength);
-			Debug.Log(pointToLook);
-			transform.LookAt(new Vector3(pointToLook.x, transform.position.y, pointToLook.z)); ;
+			Vector3 projectedPos = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+			Vector3 currentPos = transform.position;
+			Vector3 rotation = projectedPos - currentPos;
+			tr.forward = rotation;
 		}
 
 		//gameObject.transform.LookAt(transform.position + newVelocity);

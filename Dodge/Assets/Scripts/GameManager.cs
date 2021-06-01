@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
 
 	IEnumerator createItemPrefab()
 	{
-		while (true)
+		while (!isGameover)
 		{
 			yield return new WaitForSeconds(5f);
 			Vector3 randomPos = new Vector3(Random.Range(-6f, 6f), 1f, Random.Range(-6f, 6f));

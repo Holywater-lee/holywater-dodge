@@ -8,6 +8,7 @@ public class BulletSpawner : MonoBehaviour
     public float spawnRateMin = 0.5f;
     public float spawnRateMax = 3f;
     public float hp = 100f;
+    public HPBar hpBar;
 
     private Transform target;
     float spawnRate;
@@ -30,6 +31,7 @@ public class BulletSpawner : MonoBehaviour
     public void getDamage(int damage)
     {
         hp -= damage;
+        hpBar.setHP((int)hp);
         if (hp <= 0)
         {
             Destroy(gameObject);
