@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-	int healAmount = 20;
+	[SerializeField] int healAmount = 20;
 	void Start()
 	{
 		StartCoroutine("Rotator");

@@ -29,13 +29,13 @@ public class PlayerBullet : MonoBehaviour
 			}
 			Destroy(gameObject);
 		}
-		else if (other.tag == "BulletSpawner")
+		else if (other.tag == "Enemy")
 		{
-			BulletSpawner spawner = other.GetComponent<BulletSpawner>();
+			Enemy enemy = other.GetComponent<Enemy>();
 
-			if (spawner != null)
+			if (enemy != null)
 			{
-				spawner.getDamage(damage);
+				enemy.getDamage(damage);
 				Destroy(gameObject);
 			}
 		}

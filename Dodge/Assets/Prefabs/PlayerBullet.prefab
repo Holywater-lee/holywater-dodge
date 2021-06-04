@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8662458258850839617}
   - component: {fileID: 8662458258850839618}
   - component: {fileID: 8662458258850839622}
+  - component: {fileID: 115018613034074388}
   - component: {fileID: 4981790259201080750}
   m_Layer: 0
   m_Name: PlayerBullet
@@ -111,6 +112,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &115018613034074388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8662458258850839619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c258b1600a32fcc488b282016def0428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4981790259201080750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,5 +136,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6591dc46e6b60d4cb55facf26876305, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 8
+  speed: 15
   damage: 20

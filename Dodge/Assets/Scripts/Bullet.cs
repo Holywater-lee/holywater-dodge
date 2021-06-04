@@ -14,7 +14,7 @@ public class Bullet : MonoBehaviour
 
 		bulletRigidbody.velocity = transform.forward * speed;
 
-		Destroy(gameObject, 3f); // 3초후에 파괴
+		Destroy(gameObject, 5f);
 	}
 
 	void OnTriggerEnter(Collider other)
@@ -27,7 +27,6 @@ public class Bullet : MonoBehaviour
 			// PlayerController 컴포넌트를 가져오는데 성공했다면
 			if (playerController != null)
 			{
-				// 상대 PlayerController 컴포넌트의 Die 실행
 				playerController.getDamage(damage);
 				Destroy(gameObject);
 			}

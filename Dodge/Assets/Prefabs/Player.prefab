@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 3861734170361479806}
   - component: {fileID: 3861734170361479801}
   - component: {fileID: 3861734170361479800}
-  - component: {fileID: 3861734170361479803}
   - component: {fileID: 3861734170361479802}
   - component: {fileID: 3861734170361479807}
+  - component: {fileID: 8980870850009219859}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -43,7 +43,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3861734170361479797}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &3861734170361479800
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -83,20 +83,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &3861734170361479803
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3861734170361479797}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &3861734170361479802
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -129,7 +115,20 @@ MonoBehaviour:
   playerBulletPrefab: {fileID: 8662458258850839619, guid: a79a120673273a1418160603e24f53b2,
     type: 3}
   hp: 100
-  speed: 8
+  speed: 6
+--- !u!135 &8980870850009219859
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3861734170361479797}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3861734171961664453
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,7 +140,6 @@ GameObject:
   - component: {fileID: 3861734171961664458}
   - component: {fileID: 3861734171961664457}
   - component: {fileID: 3861734171961664456}
-  - component: {fileID: 3861734171961664459}
   m_Layer: 0
   m_Name: Gun
   m_TagString: Untagged
@@ -157,8 +155,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3861734171961664453}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.67}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.45}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_Children: []
   m_Father: {fileID: 3861734170361479806}
   m_RootOrder: 0
@@ -210,16 +208,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &3861734171961664459
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3861734171961664453}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
