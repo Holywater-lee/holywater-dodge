@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour
 {
 	[SerializeField] float speed;
 	[SerializeField] float life;
+	[SerializeField] float maxLife;
 	[SerializeField] string enemyType;
 	[SerializeField] HPBar hpBar;
 
@@ -26,10 +27,10 @@ public class Enemy : MonoBehaviour
 	public void getDamage(float damage)
 	{
 		life -= damage;
-		hpBar.setHP((int)life);
+		hpBar.setHP(life, maxLife);
 
 		color.material.color = new Color(1f, 150 / 255f, 150 / 255f);
-		Invoke("ReturnColor", 0.05f);
+		Invoke("ReturnColor", 0.08f);
 
 		if (life <= 0)
 		{

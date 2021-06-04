@@ -16,7 +16,10 @@ public class GameManager : MonoBehaviour
 	public Text timeText;
 	public Text recordText;
 
-	public GameObject level; // 불릿 등 레벨 수정할 변수
+	public GameObject[] enemyPrefabs;
+	public GameObject[] enemySpawnPositions;
+
+	float spawnTime = 3f;
 
 	float surviveTime;
 	bool isGameover;
@@ -27,6 +30,8 @@ public class GameManager : MonoBehaviour
 		isGameover = false;
 		float bestTime = PlayerPrefs.GetFloat("BestTime");
 		recordText.text = "Best Time: " + (int)bestTime;
+
+		StartCoroutine(SpawnEnemyTimer());
 	}
 
 	void Update()
@@ -43,6 +48,23 @@ public class GameManager : MonoBehaviour
 				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 			}
 		}
+	}
+
+	IEnumerator SpawnEnemyTimer()
+	{
+		while(!isGameover)
+		{
+			SpawnEnemy();
+			yield return new WaitForSeconds(spawnTime);
+		}
+	}
+
+	void SpawnEnemy()
+	{
+		int randomEnemy = Random.Range(0, 3);
+		int randomPos = Random.Range(0, 4);
+
+		Instantiate(enemyPrefabs[randomEnemy], enemySpawnPositions[randomPos].transform.position, Quaternion.identity);
 	}
 
 	public void EndGame()

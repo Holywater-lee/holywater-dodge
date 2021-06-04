@@ -116,6 +116,11 @@ MonoBehaviour:
     type: 3}
   hp: 100
   speed: 6
+  bulletDamage: 30
+  increasedDamage: 0
+  atkRate: 0.2
+  bulletSpeed: 30
+  invincibleTime: 1
 --- !u!135 &8980870850009219859
 SphereCollider:
   m_ObjectHideFlags: 0

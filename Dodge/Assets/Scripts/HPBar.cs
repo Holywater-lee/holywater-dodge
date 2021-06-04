@@ -7,8 +7,8 @@ public class HPBar : MonoBehaviour
 {
 	public Image hpBar;
 
-	public void setHP(int hp)
+	public void setHP(float hp, float maxhp)
 	{
-		hpBar.fillAmount = (float)hp / 100f;
+		hpBar.fillAmount = hp / maxhp;
 	}
 }

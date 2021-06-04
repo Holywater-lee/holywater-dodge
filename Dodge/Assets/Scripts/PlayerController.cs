@@ -4,22 +4,30 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-	private Rigidbody playerRigidbody;
+	[SerializeField] HPBar hpBar;
+	[SerializeField] GameObject playerBulletPrefab;
+
+	Rigidbody playerRigidbody;
 	Transform tr;
-	public HPBar hpBar;
-	public GameObject playerBulletPrefab;
+	Renderer color;
 
-	float timerAfterSpawn = 0f;
-	float spawnRate = 0.2f;
+	[SerializeField] float maxLife = 100;
+	[SerializeField] float life = 100;
+	[SerializeField] float speed = 8f;
+	[SerializeField] float bulletDamage = 30f;
+	public float increasedDamage = 0f;
+	[SerializeField] float atkRate = 0.2f;
+	[SerializeField] float bulletSpeed = 30f;
+	[SerializeField] float invincibleTime = 1f;
 
-	public int hp = 100;
-	public float speed = 8f;
+	float timerAfterAtk = 0f;
+	bool bIsInvincible = false;
 
 	void Start()
 	{
-		// GetComponent 내 게임 오브젝트에서 원하는 타입의 컴포넌트를 찾아오는 메서드
 		playerRigidbody = GetComponent<Rigidbody>();
 		tr = GetComponent<Transform>();
+		color = GetComponent<Renderer>();
 	}
 
 	void Update()
@@ -32,7 +40,7 @@ public class PlayerController : MonoBehaviour
 
 		Vector3 newVelocity = new Vector3(xSpeed, 0f, zSpeed);
 		playerRigidbody.velocity = newVelocity;
-
+		
 		RaycastHit hit = new RaycastHit();
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -43,35 +51,75 @@ public class PlayerController : MonoBehaviour
 			Vector3 rotation = projectedPos - currentPos;
 			tr.forward = rotation;
 		}
+		
+		timerAfterAtk += Time.deltaTime;
 
-		//gameObject.transform.LookAt(transform.position + newVelocity);
-
-		timerAfterSpawn += Time.deltaTime;
-		if (Input.GetButton("Fire1") && timerAfterSpawn >= spawnRate)
+		if ((Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1")) && timerAfterAtk >= atkRate)
 		{
-			timerAfterSpawn = 0f;
+			timerAfterAtk = 0f;
 			var bullet = Instantiate(playerBulletPrefab, transform.position, transform.rotation);
+			var bulletDmg = bullet.GetComponent<PlayerBullet>();
+			bulletDmg.damage = bulletDamage + increasedDamage;
+			bulletDmg.speed = bulletSpeed;
 		}
 	}
 
-	public void getDamage(int damage)
+	void OnTriggerEnter(Collider other)
 	{
-		hp -= damage;
-		hpBar.setHP(hp);
-		if (hp <= 0)
+		if (other.gameObject.tag == "Enemy")
+		{
+			getDamage(30); // 고정 피해
+		}
+	}
+
+	public void getDamage(float damage)
+	{
+		if (!bIsInvincible)
+		{
+			life -= damage;
+			hpBar.setHP(life, maxLife);
+
+			StartCoroutine(SetInvincible(invincibleTime));
+
+			StartCoroutine(InvincibleColor());
+		}
+		
+		if (life <= 0)
 		{
 			Die();
 		}
 	}
 
+	IEnumerator InvincibleColor()
+	{
+		int i = 0;
+		while (i < 10 || bIsInvincible)
+		{
+			if (i % 2 == 1)
+				color.material.color = new Color(30 / 255f, 82 / 255f, 102 / 255f);
+			else
+				color.material.color = new Color(52 / 255f, 200 / 255f, 1f);
+			yield return new WaitForSeconds(0.1f);
+			i++;
+		}
+	}
+
+	IEnumerator SetInvincible(float invTime)
+	{
+		bIsInvincible = true;
+		yield return new WaitForSeconds(invTime);
+		bIsInvincible = false;
+		color.material.color = new Color(52 / 255f, 200 / 255f, 1f);
+	}
+
 	public void GetHeal(int heal)
 	{
-		hp += heal;
-		if (hp >= 100)
+		life += heal;
+		if (life >= maxLife)
 		{
-			hp = 100;
+			life = maxLife;
 		}
-		hpBar.setHP(hp);
+		hpBar.setHP(life, maxLife);
 	}
 
 	void Die()

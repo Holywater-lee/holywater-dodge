@@ -5,8 +5,11 @@ using UnityEngine;
 public class PlayerBullet : MonoBehaviour
 {
 	Rigidbody bulletRigidbody;
-	public float speed;
-	public int damage = 20;
+	[HideInInspector] public float speed;
+	[HideInInspector] public float damage;
+
+	// 관통 여부
+	bool bIsPierce = false;
 
 	void Start()
 	{
@@ -14,29 +17,21 @@ public class PlayerBullet : MonoBehaviour
 
 		bulletRigidbody.velocity = transform.forward * speed;
 
-		Destroy(gameObject, 3f); // 3초후에 파괴
+		Destroy(gameObject, 5f);
 	}
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.tag == "Bullet")
-		{
-			Bullet bullet = other.GetComponent<Bullet>();
-
-			if (bullet != null)
-			{
-				Destroy(bullet.gameObject);
-			}
-			Destroy(gameObject);
-		}
-		else if (other.tag == "Enemy")
+		if (other.tag == "Enemy")
 		{
 			Enemy enemy = other.GetComponent<Enemy>();
 
 			if (enemy != null)
 			{
 				enemy.getDamage(damage);
-				Destroy(gameObject);
+				
+				if (!bIsPierce)
+					Destroy(gameObject);
 			}
 		}
 	}
