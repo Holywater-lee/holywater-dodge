@@ -7,29 +7,47 @@ using UnityEngine.SceneManagement;
 /*
  게임매니저
  게임시작/종료 관리
- 스코어관리/시간
+ 스코어관리/스테이지 시간
  */
 
 public class GameManager : MonoBehaviour
 {
 	public GameObject gameoverText;
-	public Text timeText;
-	public Text recordText;
+	public Text scoreText;
+	public Text bestScoreText;
 
 	public GameObject[] enemyPrefabs;
 	public GameObject[] enemySpawnPositions;
+	public GameObject[] bossPrefabs;
+
+	public float currentScore = 0f;
 
 	float spawnTime = 3f;
+	float stageTime = 0f;
+	float bossSpawnTime = 0f;
+	int stageNum = 0;
+	
+	bool isGameover = false;
+	bool isBossDead = false;
 
-	float surviveTime;
-	bool isGameover;
+	public static GameManager instance;
+
+	void Awake()
+	{
+		instance = this;
+	}
 
 	void Start()
 	{
-		surviveTime = 0f;
-		isGameover = false;
-		float bestTime = PlayerPrefs.GetFloat("BestTime");
-		recordText.text = "Best Time: " + (int)bestTime;
+		float bestScore = PlayerPrefs.GetFloat("BestScore");
+		bestScoreText.text = "Best Score: " + (int)bestScore;
+
+		switch (stageNum)
+		{
+			case 0: bossSpawnTime = 30f; break;
+			case 1: bossSpawnTime = 45f; break;
+			case 2: bossSpawnTime = 70f; break;
+		}
 
 		StartCoroutine(SpawnEnemyTimer());
 	}
@@ -38,8 +56,13 @@ public class GameManager : MonoBehaviour
 	{
 		if (!isGameover)
 		{
-			surviveTime += Time.deltaTime;
-			timeText.text = "Time: " + (int)surviveTime;
+			stageTime += Time.deltaTime;
+			
+			if (stageTime > bossSpawnTime)
+			{
+				//SpawnBoss(stageNum);
+				//if(isBossDead) 다음씬 -> isBossDead = false
+			}
 		}
 		else
 		{
@@ -48,6 +71,11 @@ public class GameManager : MonoBehaviour
 				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
 			}
 		}
+	}
+
+	public void RefreshScore()
+	{
+		scoreText.text = "Score: " + (int)currentScore;
 	}
 
 	IEnumerator SpawnEnemyTimer()
@@ -62,9 +90,36 @@ public class GameManager : MonoBehaviour
 	void SpawnEnemy()
 	{
 		int randomEnemy = Random.Range(0, 3);
-		int randomPos = Random.Range(0, 4);
+		int randomPos = Random.Range(0, 6);
 
-		Instantiate(enemyPrefabs[randomEnemy], enemySpawnPositions[randomPos].transform.position, Quaternion.identity);
+		if (randomPos < 4)
+		{
+			var mob = Instantiate(enemyPrefabs[randomEnemy], enemySpawnPositions[randomPos].transform.position, Quaternion.identity);
+			var rigid = mob.GetComponent<Rigidbody>();
+			rigid.velocity = new Vector3(0f, 0f, mob.GetComponent<Enemy>().speed * -1f);
+		}
+		else if (randomPos == 4)
+		{
+			StartCoroutine(EnemySpawnPattern0("Right", 4));
+		}
+		else if (randomPos == 5)
+		{
+			StartCoroutine(EnemySpawnPattern0("Left", 5));
+		}
+		// 6,7은 아직 구상중!
+	}
+
+	IEnumerator EnemySpawnPattern0(string moveDirection, int posIndex)
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			var mob = Instantiate(enemyPrefabs[0], enemySpawnPositions[posIndex].transform.position, Quaternion.identity);
+			var rigid = mob.GetComponent<Rigidbody>();
+
+			rigid.velocity = new Vector3((moveDirection == "Right" ? 1f : -1f) * mob.GetComponent<Enemy>().speed, 0f, 0f);
+
+			yield return new WaitForSeconds(0.5f);
+		}
 	}
 
 	public void EndGame()
@@ -72,15 +127,14 @@ public class GameManager : MonoBehaviour
 		isGameover = true;
 		gameoverText.SetActive(true);
 
-		// BestTime이 저장되어있지 않다면 0
-		float bestTime = PlayerPrefs.GetFloat("BestTime");
+		float bestScore = PlayerPrefs.GetFloat("BestScore");
 
-		if (surviveTime > bestTime)
+		if (currentScore > bestScore)
 		{
-			bestTime = surviveTime;
-			PlayerPrefs.SetFloat("BestTime", bestTime);
+			bestScore = currentScore;
+			PlayerPrefs.SetFloat("BestScore", bestScore);
 		}
 
-		recordText.text = "Best Time: " + (int)bestTime;
+		bestScoreText.text = "Best Score: " + (int)bestScore;
 	}
 }

@@ -124,6 +124,7 @@ MonoBehaviour:
   speed: 2
   life: 300
   maxLife: 300
+  score: 30
   enemyType: 
   hpBar: {fileID: 5164685473212489209}
 --- !u!54 &5164685472454098371

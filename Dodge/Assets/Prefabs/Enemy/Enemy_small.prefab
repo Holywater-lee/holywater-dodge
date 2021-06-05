@@ -419,9 +419,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd026bfaf24b51d4bb3c7a6cb0072adf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 7
   life: 50
   maxLife: 50
+  score: 5
   enemyType: 
   hpBar: {fileID: 3454748532288052378}
 --- !u!54 &3454748532498843935

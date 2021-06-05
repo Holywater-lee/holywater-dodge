@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameoverText: {fileID: 1177023665}
-  timeText: {fileID: 1273669269}
-  recordText: {fileID: 472298354}
+  scoreText: {fileID: 1273669269}
+  bestScoreText: {fileID: 1376300021}
   enemyPrefabs:
   - {fileID: 3454748532498843921, guid: 7eb89459b4385e544838525048e20c98, type: 3}
   - {fileID: 1306337879138797932, guid: d75eb7ffc34b14d4786b5f71c85c9030, type: 3}
@@ -163,6 +163,12 @@ MonoBehaviour:
   - {fileID: 1233590629}
   - {fileID: 964174954}
   - {fileID: 885196068}
+  - {fileID: 2029688413}
+  - {fileID: 6017082952507080765}
+  - {fileID: 6017082952507080764}
+  - {fileID: 6017082952507080763}
+  bossPrefabs: []
+  currentScore: 0
 --- !u!4 &137463031
 Transform:
   m_ObjectHideFlags: 0
@@ -243,18 +249,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &472298354 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 106916079566004763, guid: 68b5d4b22ca366f47a5ac40dbc1579d7,
-    type: 3}
-  m_PrefabInstance: {fileID: 106916079097975145}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,6 +401,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1376300021 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1376300021, guid: 68b5d4b22ca366f47a5ac40dbc1579d7,
+    type: 3}
+  m_PrefabInstance: {fileID: 106916079097975145}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &2029688413 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2029688413, guid: 61bb3b25ebc71a54bbd845955fcb3d5c,
+    type: 3}
+  m_PrefabInstance: {fileID: 6017082952507080762}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &106916079097975145
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -674,6 +686,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 61bb3b25ebc71a54bbd845955fcb3d5c, type: 3}
+--- !u!1 &6017082952507080763 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5466980408083924619, guid: 61bb3b25ebc71a54bbd845955fcb3d5c,
+    type: 3}
+  m_PrefabInstance: {fileID: 6017082952507080762}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6017082952507080764 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 921740158718222989, guid: 61bb3b25ebc71a54bbd845955fcb3d5c,
+    type: 3}
+  m_PrefabInstance: {fileID: 6017082952507080762}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6017082952507080765 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 758184439107498908, guid: 61bb3b25ebc71a54bbd845955fcb3d5c,
+    type: 3}
+  m_PrefabInstance: {fileID: 6017082952507080762}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6323067035721582169
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -685,6 +715,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Main Camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 6323067036377541418, guid: e6418375884012e4ea98fbe55121d6e6,
+        type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6323067036377541418, guid: e6418375884012e4ea98fbe55121d6e6,
+        type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6323067036377541418, guid: e6418375884012e4ea98fbe55121d6e6,
+        type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6323067036377541421, guid: e6418375884012e4ea98fbe55121d6e6,
         type: 3}

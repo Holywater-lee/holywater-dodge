@@ -4,24 +4,18 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-	[SerializeField] float speed;
+	public float speed;
 	[SerializeField] float life;
 	[SerializeField] float maxLife;
+	[SerializeField] float score;
 	[SerializeField] string enemyType;
 	[SerializeField] HPBar hpBar;
 
-	Rigidbody rigid;
 	Renderer color;
 
 	void Awake()
 	{
-		rigid = GetComponent<Rigidbody>();
 		color = GetComponent<Renderer>();
-	}
-
-	void Start()
-	{
-		rigid.velocity = Vector3.forward * -1 * speed;
 	}
 
 	public void getDamage(float damage)
@@ -29,17 +23,27 @@ public class Enemy : MonoBehaviour
 		life -= damage;
 		hpBar.setHP(life, maxLife);
 
-		color.material.color = new Color(1f, 150 / 255f, 150 / 255f);
-		Invoke("ReturnColor", 0.08f);
+		//color.material.color = new Color(1f, 150 / 255f, 150 / 255f);
+		//Invoke("ReturnColor", 0.08f);
+		StartCoroutine(onDamageColor(0.09f));
 
 		if (life <= 0)
 		{
+			GameManager.instance.currentScore += score;
+			GameManager.instance.RefreshScore();
 			Destroy(gameObject);
 		}
 	}
 
-	void ReturnColor()
+	//void ReturnColor()
+	//{
+	//	color.material.color = new Color(1f, 52 / 255f, 52 / 255f);
+	//}
+
+	IEnumerator onDamageColor(float sec)
 	{
+		color.material.color = new Color(1f, 150 / 255f, 150 / 255f);
+		yield return new WaitForSeconds(sec);
 		color.material.color = new Color(1f, 52 / 255f, 52 / 255f);
 	}
 }
