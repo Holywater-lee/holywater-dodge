@@ -97,7 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 24bb013884d56e74592fcb4ea8d2fff8,
+    type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
@@ -120,7 +121,7 @@ NavMeshSettings:
     accuratePlacement: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 0}
+  m_NavMeshData: {fileID: 23800000, guid: 1fe58593a5e6bb747a74bf9d19c088ee, type: 2}
 --- !u!1 &332575346
 GameObject:
   m_ObjectHideFlags: 0
@@ -243,6 +244,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeText: {fileID: 1800751372}
+  recordText: {fileID: 1287626836}
+  gameoverText: {fileID: 2014830247}
   bulletSpawnwerPrefab: {fileID: 8576804959927849707, guid: 28d12e7b45e627041a73afd112243425,
     type: 3}
   itemPrefab: {fileID: 8681719118077724409, guid: f9c9e86ad22445243a97a9b9edb01714,
@@ -331,6 +334,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6418375884012e4ea98fbe55121d6e6, type: 3}
+--- !u!114 &1287626836 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 106916079566004763, guid: 68b5d4b22ca366f47a5ac40dbc1579d7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1800751371}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1337422174
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -338,6 +353,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7471188436611013138, guid: 61bb3b25ebc71a54bbd845955fcb3d5c,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7471188436611013150, guid: 61bb3b25ebc71a54bbd845955fcb3d5c,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -574,6 +594,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf8beee3a70e8da4f9fcf36350e4aca6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2014830247 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 106916080203490776, guid: 68b5d4b22ca366f47a5ac40dbc1579d7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1800751371}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2135441651
 PrefabInstance:
   m_ObjectHideFlags: 0

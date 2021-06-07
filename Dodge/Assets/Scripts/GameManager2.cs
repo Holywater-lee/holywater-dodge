@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 public class GameManager2 : MonoBehaviour
 {
 	public Text timeText;
+	public Text recordText;
+	public GameObject gameoverText;
 	public GameObject bulletSpawnwerPrefab;
 	public GameObject itemPrefab;
 	public GameObject level;
@@ -14,7 +16,6 @@ public class GameManager2 : MonoBehaviour
 	List<GameObject> itemList = new List<GameObject>();
 	List<GameObject> spawnerList = new List<GameObject>();
 
-	int spawnCounter = 0;
 	float surviveTime;
 	bool isGameover = false;
 
@@ -32,6 +33,13 @@ public class GameManager2 : MonoBehaviour
 		{
 			surviveTime += Time.deltaTime;
 			timeText.text = "Time: " + (int)surviveTime;
+		}
+		else
+		{
+			if (Input.GetKeyDown(KeyCode.R))
+			{
+				SceneManager.LoadScene("SampleScene2");
+			}
 		}
 	}
 
@@ -67,14 +75,33 @@ public class GameManager2 : MonoBehaviour
 
 			CreateMob();
 
-			if (i != 2)
+			if (i < 2)
 			{
 				CreateItem();
 			}
 			else
 			{
+				MobFollowPlayer();
+				StartCoroutine(MobFollowStop());
 				i = 0;
 			}
+		}
+	}
+
+	void MobFollowPlayer()
+	{
+		foreach (GameObject spawner in spawnerList)
+		{
+			spawner.GetComponent<BulletSpawner>().isMoving = true;
+		}
+	}
+
+	IEnumerator MobFollowStop()
+	{
+		yield return new WaitForSeconds(2f);
+		foreach (GameObject spawner in spawnerList)
+		{
+			spawner.GetComponent<BulletSpawner>().isMoving = false;
 		}
 	}
 
@@ -89,5 +116,23 @@ public class GameManager2 : MonoBehaviour
 			}
 			itemList.Clear();
 		}
+	}
+
+	public void EndGame()
+	{
+		isGameover = true;
+		gameoverText.SetActive(true);
+		StopCoroutine("createBulletSpawner");
+
+		// BestTime이 저장되어있지 않다면 0
+		float bestTime = PlayerPrefs.GetFloat("BestTime");
+
+		if (surviveTime > bestTime)
+		{
+			bestTime = surviveTime;
+			PlayerPrefs.SetFloat("BestTime", bestTime);
+		}
+
+		recordText.text = "Best Time: " + (int)bestTime;
 	}
 }

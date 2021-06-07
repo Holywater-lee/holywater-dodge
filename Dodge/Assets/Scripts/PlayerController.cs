@@ -80,6 +80,18 @@ public class PlayerController : MonoBehaviour
 
 		GameManager gameManager = FindObjectOfType<GameManager>();
 
-		gameManager.EndGame();
+		if (gameManager != null)
+		{
+			gameManager.EndGame();
+		}
+		else
+		{
+			GameManager2 gManager2 = FindObjectOfType<GameManager2>();
+			
+			if (gManager2 != null)
+			{
+				gManager2.EndGame();
+			}
+		}
 	}
 }
