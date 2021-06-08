@@ -19,6 +19,13 @@ public class GameManager2 : MonoBehaviour
 	float surviveTime;
 	bool isGameover = false;
 
+	public static GameManager2 instance;
+
+	private void Awake()
+	{
+		instance = this;
+	}
+
 	void Start()
 	{
 		surviveTime = 0f;
@@ -134,5 +141,10 @@ public class GameManager2 : MonoBehaviour
 		}
 
 		recordText.text = "Best Time: " + (int)bestTime;
+	}
+
+	public void DieBulletSpawner(GameObject obj)
+	{
+		spawnerList.Remove(obj);
 	}
 }

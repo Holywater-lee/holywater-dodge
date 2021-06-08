@@ -17,31 +17,45 @@ public class BulletSpawner : MonoBehaviour
 
 	public bool isMoving = false;
 	NavMeshAgent nvAgent;
+	Animator animator;
 
 	void Start()
 	{
 		// 누적시간 초기화
 		timeAfterSpawn = 0f;
 		// 생성 간격 랜덤설정
-		spawnRate = Random.Range(spawnRateMin, spawnRateMax);
+		//spawnRate = Random.Range(spawnRateMin, spawnRateMax);
+		spawnRate = 0.7f;
 		// PlayerController 컴포넌트를 가진 게임오브젝트를 찾아 target에 할당
 		target = FindObjectOfType<PlayerController>().transform;
 		nvAgent = GetComponent<NavMeshAgent>();
+		animator = GetComponent<Animator>();
 		StartCoroutine(MonsterAI());
 	}
 
 	void Update()
 	{
+		// 죽으면 처리안되도록 예외처리
+		if (hp <= 0)
+			return;
+
 		CreateBullet();
 	}
 
 	public void getDamage(int damage)
 	{
-		hp -= damage;
-		hpBar.setHP((int)hp);
-		if (hp <= 0)
+		if (hp > 0)
 		{
-			Destroy(gameObject);
+			hp -= damage;
+			hpBar.setHP((int)hp);
+			if (hp <= 0)
+			{
+				animator.SetTrigger("Die");
+				isMoving = false;
+				GameManager2.instance.DieBulletSpawner(gameObject);
+
+				Destroy(gameObject, 5f);
+			}
 		}
 	}
 
@@ -55,8 +69,9 @@ public class BulletSpawner : MonoBehaviour
 			timeAfterSpawn = 0f;
 			GameObject bullet = Instantiate(bulletPrefab, transform.position, transform.rotation);
 			bullet.transform.LookAt(target);
+			transform.LookAt(target);
 
-			spawnRate = Random.Range(spawnRateMin, spawnRateMax);
+			//spawnRate = Random.Range(spawnRateMin, spawnRateMax);
 		}
 	}
 
@@ -70,10 +85,12 @@ public class BulletSpawner : MonoBehaviour
 			{
 				nvAgent.destination = target.position;
 				nvAgent.isStopped = false;
+				animator.SetBool("isMoving", true);
 			}
 			else
 			{
 				nvAgent.isStopped = true;
+				animator.SetBool("isMoving", false);
 			}
 		}
 	}
