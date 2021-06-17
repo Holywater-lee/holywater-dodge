@@ -109,7 +109,7 @@ public class PlayerController : MonoBehaviour
 		bIsInvincible = true;
 		yield return new WaitForSeconds(invTime);
 		bIsInvincible = false;
-		color.material.color = new Color(100 / 255f, 100 / 255f, 100 / 255f);
+		color.material.color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
 	}
 
 	public void GetHeal(int heal)

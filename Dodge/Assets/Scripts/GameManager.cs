@@ -117,14 +117,14 @@ public class GameManager : MonoBehaviour
 
 	IEnumerator EnemySpawnPattern0(string moveDirection, int posIndex)
 	{
+		Transform target = FindObjectOfType<PlayerController>().transform;
 		for (int i = 0; i < 5; i++)
 		{
 			var mob = Instantiate(enemyPrefabs[0], enemySpawnPositions[posIndex].transform.position, Quaternion.identity);
 			var rigid = mob.GetComponent<Rigidbody>();
+			mob.transform.LookAt(target);
 
-			mob.transform.LookAt(new Vector3(3f*(moveDirection == "Right" ? 1f : -1f) + transform.position.x, transform.position.y, transform.position.z));
-
-			rigid.velocity = new Vector3(0f, 0f, mob.GetComponent<Enemy>().speed);
+			rigid.velocity = new Vector3((moveDirection == "Right" ? 1f : -1f) * mob.GetComponent<Enemy>().speed, 0f, 0f);
 
 			yield return new WaitForSeconds(0.5f);
 		}
