@@ -4,18 +4,31 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+	[Header("몬스터 능력치")]
 	public float speed;
 	[SerializeField] float life;
 	[SerializeField] float maxLife;
 	[SerializeField] float score;
-	[SerializeField] string enemyType;
 	[SerializeField] HPBar hpBar;
+	[SerializeField] bool canAttack;
+	[SerializeField] float AttackCooldown;
 
 	Renderer color;
+
+	float ranAtkcool;
 
 	void Awake()
 	{
 		color = GetComponent<Renderer>();
+	}
+
+	void Start()
+	{
+		if (canAttack)
+		{
+			ranAtkcool = Random.Range(AttackCooldown - 1f, AttackCooldown + 1f);
+			StartCoroutine(Attack());
+		}
 	}
 
 	public void getDamage(float damage)
@@ -23,8 +36,6 @@ public class Enemy : MonoBehaviour
 		life -= damage;
 		hpBar.setHP(life, maxLife);
 
-		//color.material.color = new Color(1f, 150 / 255f, 150 / 255f);
-		//Invoke("ReturnColor", 0.08f);
 		StartCoroutine(onDamageColor(0.09f));
 
 		if (life <= 0)
@@ -35,15 +46,25 @@ public class Enemy : MonoBehaviour
 		}
 	}
 
-	//void ReturnColor()
-	//{
-	//	color.material.color = new Color(1f, 52 / 255f, 52 / 255f);
-	//}
 
 	IEnumerator onDamageColor(float sec)
 	{
-		color.material.color = new Color(1f, 150 / 255f, 150 / 255f);
+		color.material.color = new Color(100 / 255f, 100 / 255f, 100 / 255f);
 		yield return new WaitForSeconds(sec);
-		color.material.color = new Color(1f, 52 / 255f, 52 / 255f);
+		color.material.color = new Color(255 / 255f, 255 / 255f, 255 / 255f);
+	}
+
+	IEnumerator Attack()
+	{
+		while(true)
+		{
+			yield return new WaitForSeconds(ranAtkcool);
+
+			ranAtkcool = Random.Range(AttackCooldown - 1f, AttackCooldown + 1f);
+			var pos = FindObjectOfType<PlayerController>();
+			transform.LookAt(pos.transform.position);
+			var bullet = Instantiate(GameManager.instance.enemyBulletPrefab, transform.position, Quaternion.identity);
+			Destroy(bullet, 3f);
+		}
 	}
 }

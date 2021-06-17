@@ -12,14 +12,20 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+	[Header("UI 텍스트")]
 	public GameObject gameoverText;
 	public Text scoreText;
 	public Text bestScoreText;
 
+	[Header("적 프리팹 모음")]
 	public GameObject[] enemyPrefabs;
 	public GameObject[] enemySpawnPositions;
 	public GameObject[] bossPrefabs;
 
+	[Header("몬스터가 사용하는 총알")]
+	public GameObject enemyBulletPrefab;
+
+	[Header("현재 점수")]
 	public float currentScore = 0f;
 
 	float spawnTime = 3f;
@@ -28,7 +34,7 @@ public class GameManager : MonoBehaviour
 	int stageNum = 0;
 	
 	bool isGameover = false;
-	bool isBossDead = false;
+	//bool isBossDead = false;
 
 	public static GameManager instance;
 
@@ -61,7 +67,7 @@ public class GameManager : MonoBehaviour
 			if (stageTime > bossSpawnTime)
 			{
 				//SpawnBoss(stageNum);
-				//if(isBossDead) 다음씬 -> isBossDead = false
+				//if(isBossDead) 다음씬 -> isBossDead = false, stageTime = 0f
 			}
 		}
 		else
@@ -80,7 +86,7 @@ public class GameManager : MonoBehaviour
 
 	IEnumerator SpawnEnemyTimer()
 	{
-		while(!isGameover)
+		while(!isGameover && stageTime < bossSpawnTime)
 		{
 			SpawnEnemy();
 			yield return new WaitForSeconds(spawnTime);
@@ -116,7 +122,9 @@ public class GameManager : MonoBehaviour
 			var mob = Instantiate(enemyPrefabs[0], enemySpawnPositions[posIndex].transform.position, Quaternion.identity);
 			var rigid = mob.GetComponent<Rigidbody>();
 
-			rigid.velocity = new Vector3((moveDirection == "Right" ? 1f : -1f) * mob.GetComponent<Enemy>().speed, 0f, 0f);
+			mob.transform.LookAt(new Vector3(3f*(moveDirection == "Right" ? 1f : -1f) + transform.position.x, transform.position.y, transform.position.z));
+
+			rigid.velocity = new Vector3(0f, 0f, mob.GetComponent<Enemy>().speed);
 
 			yield return new WaitForSeconds(0.5f);
 		}
