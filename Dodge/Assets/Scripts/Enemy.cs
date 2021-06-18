@@ -24,6 +24,8 @@ public class Enemy : MonoBehaviour
 
 	void Start()
 	{
+		GameManager.instance.enemysList.Add(this.gameObject);
+
 		if (canAttack)
 		{
 			ranAtkcool = Random.Range(AttackCooldown - 1f, AttackCooldown + 1f);
@@ -42,10 +44,11 @@ public class Enemy : MonoBehaviour
 		{
 			GameManager.instance.currentScore += score;
 			GameManager.instance.RefreshScore();
+
+			GameManager.instance.enemysList.Remove(this.gameObject);
 			Destroy(gameObject);
 		}
 	}
-
 
 	IEnumerator onDamageColor(float sec)
 	{
@@ -56,15 +59,14 @@ public class Enemy : MonoBehaviour
 
 	IEnumerator Attack()
 	{
-		while(true)
+		while(canAttack)
 		{
 			yield return new WaitForSeconds(ranAtkcool);
 
 			ranAtkcool = Random.Range(AttackCooldown - 1f, AttackCooldown + 1f);
 			var pos = FindObjectOfType<PlayerController>();
 			transform.LookAt(pos.transform.position);
-			var bullet = Instantiate(GameManager.instance.enemyBulletPrefab, transform.position, Quaternion.identity);
-			Destroy(bullet, 3f);
+			var bullet = Instantiate(GameManager.instance.enemyBulletPrefab, transform.position, transform.rotation);
 		}
 	}
 }

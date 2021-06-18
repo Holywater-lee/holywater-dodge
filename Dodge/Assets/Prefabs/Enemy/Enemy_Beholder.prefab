@@ -1477,9 +1477,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd026bfaf24b51d4bb3c7a6cb0072adf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 4
-  life: 150
-  maxLife: 150
+  speed: 5
+  life: 125
+  maxLife: 125
   score: 20
   hpBar: {fileID: 565775177956446424}
   canAttack: 0

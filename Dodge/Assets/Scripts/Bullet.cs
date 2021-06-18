@@ -14,7 +14,15 @@ public class Bullet : MonoBehaviour
 
 		bulletRigidbody.velocity = transform.forward * speed;
 
-		Destroy(gameObject, 5f);
+		GameManager.instance.enemyBulletsList.Add(this.gameObject);
+		StartCoroutine(DeleteBulletByTime(3f));
+	}
+
+	IEnumerator DeleteBulletByTime(float time)
+	{
+		yield return new WaitForSeconds(time);
+		GameManager.instance.enemyBulletsList.Remove(this.gameObject);
+		Destroy(this.gameObject);
 	}
 
 	void OnTriggerEnter(Collider other)

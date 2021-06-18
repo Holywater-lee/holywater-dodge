@@ -28,13 +28,18 @@ public class GameManager : MonoBehaviour
 	[Header("현재 점수")]
 	public float currentScore = 0f;
 
-	float spawnTime = 3f;
+	float spawnTime = 2f;
 	float stageTime = 0f;
 	float bossSpawnTime = 0f;
 	int stageNum = 0;
+	int bombCount = 3;
 	
 	bool isGameover = false;
-	//bool isBossDead = false;
+	bool isBossSpawned = false;
+	bool isBossCleared = false;
+
+	public List<GameObject> enemyBulletsList;
+	public List<GameObject> enemysList;
 
 	public static GameManager instance;
 
@@ -56,6 +61,7 @@ public class GameManager : MonoBehaviour
 		}
 
 		StartCoroutine(SpawnEnemyTimer());
+		StartCoroutine(BossSpawnTimer());
 	}
 
 	void Update()
@@ -64,11 +70,22 @@ public class GameManager : MonoBehaviour
 		{
 			stageTime += Time.deltaTime;
 			
-			if (stageTime > bossSpawnTime)
+			if (Input.GetKeyDown(KeyCode.Q))
 			{
-				//SpawnBoss(stageNum);
-				//if(isBossDead) 다음씬 -> isBossDead = false, stageTime = 0f
+				if (bombCount > 0)
+				{
+					bombCount--;
+					Bomb();
+				}
 			}
+
+			if (isBossCleared)
+			{
+				//SceneManager.LoadScene(스테이지 if문이나 switch로 어떻게);
+				isBossSpawned = false;
+				isBossCleared = false;
+			}
+
 		}
 		else
 		{
@@ -79,6 +96,43 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	IEnumerator BossSpawnTimer()
+	{
+		while(!isBossSpawned && !isGameover)
+		{
+			if (stageTime > bossSpawnTime)
+			{
+				SpawnBossEnemy(stageNum);
+			}
+			yield return new WaitForSeconds(1f);
+		}
+	}
+
+	void SpawnBossEnemy(int stageNumber)
+	{
+		if (stageNumber == 0)
+		{
+			//var Boss = Instantiate(bossPrefabs[stageNumber], BossSpawnPos.transform.position, Quaternion.identity);
+			//sound재생;
+		}
+
+		// 보스 소환 시 일반몹 제거
+		foreach (GameObject enemys in enemysList)
+		{
+			Destroy(enemys);
+		}
+		enemysList.Clear();
+	}
+
+	void Bomb()
+	{
+		foreach(GameObject bullets in enemyBulletsList)
+		{
+			Destroy(bullets);
+		}
+		enemyBulletsList.Clear();
+	}
+
 	public void RefreshScore()
 	{
 		scoreText.text = "Score: " + (int)currentScore;
@@ -86,10 +140,12 @@ public class GameManager : MonoBehaviour
 
 	IEnumerator SpawnEnemyTimer()
 	{
+		float RanSpawnTime = Random.Range(spawnTime - 1f, spawnTime + 1f);
 		while(!isGameover && stageTime < bossSpawnTime)
 		{
 			SpawnEnemy();
-			yield return new WaitForSeconds(spawnTime);
+			RanSpawnTime = Random.Range(spawnTime - 1f, spawnTime + 1f);
+			yield return new WaitForSeconds(RanSpawnTime);
 		}
 	}
 
@@ -122,7 +178,6 @@ public class GameManager : MonoBehaviour
 		{
 			var mob = Instantiate(enemyPrefabs[0], enemySpawnPositions[posIndex].transform.position, Quaternion.identity);
 			var rigid = mob.GetComponent<Rigidbody>();
-			mob.transform.LookAt(target);
 
 			rigid.velocity = new Vector3((moveDirection == "Right" ? 1f : -1f) * mob.GetComponent<Enemy>().speed, 0f, 0f);
 

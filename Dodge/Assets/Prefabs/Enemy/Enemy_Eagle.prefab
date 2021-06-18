@@ -896,8 +896,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 7
-  life: 50
-  maxLife: 50
+  life: 75
+  maxLife: 75
   score: 10
   hpBar: {fileID: 8341385680903828867}
   canAttack: 1
