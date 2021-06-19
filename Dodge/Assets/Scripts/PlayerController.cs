@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
 	Rigidbody playerRigidbody;
 	Transform tr;
 	Renderer color;
+	AudioSource ado;
 
 	[SerializeField] float maxLife = 100;
 	[SerializeField] float life = 100;
@@ -23,11 +24,14 @@ public class PlayerController : MonoBehaviour
 	float timerAfterAtk = 0f;
 	bool bIsInvincible = false;
 
+	[HideInInspector] public bool pierceBullet = false;
+
 	void Start()
 	{
 		playerRigidbody = GetComponent<Rigidbody>();
 		tr = GetComponent<Transform>();
 		color = GetComponent<Renderer>();
+		ado = GetComponent<AudioSource>();
 	}
 
 	void Update()
@@ -57,10 +61,13 @@ public class PlayerController : MonoBehaviour
 		if ((Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1")) && timerAfterAtk >= atkRate)
 		{
 			timerAfterAtk = 0f;
+			ado.Play();
 			var bullet = Instantiate(playerBulletPrefab, transform.position, transform.rotation);
 			var bulletDmg = bullet.GetComponent<PlayerBullet>();
 			bulletDmg.damage = bulletDamage + increasedDamage;
 			bulletDmg.speed = bulletSpeed;
+			if (pierceBullet)
+				bulletDmg.IsPierce = true;
 		}
 	}
 
@@ -120,6 +127,26 @@ public class PlayerController : MonoBehaviour
 			life = maxLife;
 		}
 		hpBar.setHP(life, maxLife);
+	}
+
+	public void PierceBuff()
+	{
+		if (pierceBullet)
+		{
+			StopCoroutine(Buff_PierceState());
+			StartCoroutine(Buff_PierceState());
+		}
+		else
+		{
+			StartCoroutine(Buff_PierceState());
+		}
+	}
+
+	IEnumerator Buff_PierceState()
+	{
+		pierceBullet = true;
+		yield return new WaitForSeconds(15f);
+		pierceBullet = false;
 	}
 
 	void Die()

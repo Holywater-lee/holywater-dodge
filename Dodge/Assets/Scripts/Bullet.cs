@@ -12,10 +12,12 @@ public class Bullet : MonoBehaviour
 	{
 		bulletRigidbody = GetComponent<Rigidbody>();
 
-		bulletRigidbody.velocity = transform.forward * speed;
+		//bulletRigidbody.velocity = transform.forward * speed;
+
+		damage += GameManager.instance.stageNum * 5;
 
 		GameManager.instance.enemyBulletsList.Add(this.gameObject);
-		StartCoroutine(DeleteBulletByTime(3f));
+		StartCoroutine(DeleteBulletByTime(10f));
 	}
 
 	IEnumerator DeleteBulletByTime(float time)
@@ -36,6 +38,7 @@ public class Bullet : MonoBehaviour
 			if (playerController != null)
 			{
 				playerController.getDamage(damage);
+				GameManager.instance.enemyBulletsList.Remove(this.gameObject);
 				Destroy(gameObject);
 			}
 		}

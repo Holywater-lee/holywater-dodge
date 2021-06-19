@@ -4,19 +4,12 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
+	[SerializeField] string ItemType;
 	[SerializeField] int healAmount = 20;
-	void Start()
-	{
-		StartCoroutine("Rotator");
-	}
 
-	IEnumerator Rotator()
+	void Update()
 	{
-		while (true)
-		{
-			transform.Rotate(0f, 15f * Time.deltaTime, 0f);
-			yield return null;
-		}
+		transform.Rotate(0f, 15f * Time.deltaTime, 0f);
 	}
 
 	private void OnTriggerEnter(Collider other)
@@ -27,8 +20,29 @@ public class Item : MonoBehaviour
 
 			if (player != null)
 			{
-				player.GetHeal(healAmount);
-				Destroy(gameObject);
+				if (ItemType == "Heal")
+				{
+					player.GetHeal(healAmount);
+					Destroy(gameObject);
+				}
+				else if (ItemType == "Buff")
+				{
+					player.PierceBuff();
+					Destroy(gameObject);
+				}
+				else if (ItemType == "Upgrade")
+				{
+					player.increasedDamage += 10f;
+					Destroy(gameObject);
+				}
+				else if (ItemType == "Bomb")
+				{
+					GameManager.instance.bombCount += 1;
+					GameManager.instance.RefreshBombText();
+					if (GameManager.instance.bombCount > 2)
+						GameManager.instance.bombCount = 2;
+					Destroy(gameObject);
+				}
 			}
 		}
 	}

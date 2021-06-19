@@ -6,7 +6,7 @@ public class UI : MonoBehaviour
 {
 	public static UI instance;
 
-	//public GameObject BossAlarmOBJ;
+	public GameObject BossHPBar;
 
 	Animator anim;
 
@@ -22,9 +22,14 @@ public class UI : MonoBehaviour
 
 	public void BossAlarmON()
 	{
-		//BossAlarmOBJ.SetActive(true);
+		BossHPBar.SetActive(true);
 		anim.SetBool("isBossSpawned", true);
 		StartCoroutine(BossAlarmOFF(4f));
+	}
+
+	public void BossHPBarOFF()
+	{
+		BossHPBar.SetActive(false);
 	}
 
 	IEnumerator BossAlarmOFF(float time)

@@ -44,9 +44,20 @@ public class Enemy : MonoBehaviour
 		{
 			GameManager.instance.currentScore += score;
 			GameManager.instance.RefreshScore();
+			SpawnItem();
 
 			GameManager.instance.enemysList.Remove(this.gameObject);
 			Destroy(gameObject);
+		}
+	}
+
+	void SpawnItem()
+	{
+		int rand = Random.Range(0, 11);
+		if (rand < 2)
+		{
+			int itemindex = Random.Range(0, 4);
+			Instantiate(GameManager.instance.itemPrefabs[itemindex], transform.position, Quaternion.identity);
 		}
 	}
 
@@ -65,8 +76,11 @@ public class Enemy : MonoBehaviour
 
 			ranAtkcool = Random.Range(AttackCooldown - 1f, AttackCooldown + 1f);
 			var pos = FindObjectOfType<PlayerController>();
-			transform.LookAt(pos.transform.position);
+			if (pos != null)
+				transform.LookAt(pos.transform.position);
 			var bullet = Instantiate(GameManager.instance.enemyBulletPrefab, transform.position, transform.rotation);
+			var bulRigid = bullet.GetComponent<Rigidbody>();
+			bulRigid.velocity = transform.forward * 7;
 		}
 	}
 }

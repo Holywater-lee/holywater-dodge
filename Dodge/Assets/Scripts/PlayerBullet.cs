@@ -9,7 +9,7 @@ public class PlayerBullet : MonoBehaviour
 	[HideInInspector] public float damage;
 
 	// 관통 여부
-	bool bIsPierce = false;
+	public bool IsPierce = false;
 
 	void Start()
 	{
@@ -29,9 +29,25 @@ public class PlayerBullet : MonoBehaviour
 			if (enemy != null)
 			{
 				enemy.getDamage(damage);
-				
-				if (!bIsPierce)
+				var fx = Instantiate(GameManager.instance.attackFX, transform.position, Quaternion.identity);
+				Destroy(fx, 1f);
+
+				if (!IsPierce)
 					Destroy(gameObject);
+			}
+			else
+			{
+				BossEnemy boss = other.GetComponent<BossEnemy>();
+
+				if(boss != null)
+				{
+					boss.getDamage(damage);
+					var fx = Instantiate(GameManager.instance.attackFX, transform.position, Quaternion.identity);
+					Destroy(fx, 1f);
+
+					if (!IsPierce)
+						Destroy(gameObject);
+				}
 			}
 		}
 	}

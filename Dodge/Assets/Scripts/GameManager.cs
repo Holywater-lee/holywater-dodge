@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
 	public GameObject[] enemySpawnPositions;
 	public GameObject[] bossPrefabs;
 	public GameObject bombPos;
+	public GameObject bossSpawnPos;
+	public GameObject[] itemPrefabs;
 
 	[Header("몬스터가 사용하는 총알")]
 	public GameObject enemyBulletPrefab;
@@ -32,20 +34,22 @@ public class GameManager : MonoBehaviour
 
 	[Header("이펙트 프리팹")]
 	public GameObject bombEffect;
+	public GameObject bossFX;
+	public GameObject attackFX;
 
 	float spawnTime = 2f;
 	float stageTime = 0f;
 	float bossSpawnTime = 0f;
-	int stageNum = 0;
-	int bombCount = 3;
+	public int stageNum = 0;
+	public int bombCount = 2;
 	
 	bool isGameover = false;
 	bool isBossSpawned = false;
-	[HideInInspector] public bool isBossCleared = false;
-
 
 	[HideInInspector] public List<GameObject> enemyBulletsList;
 	[HideInInspector] public List<GameObject> enemysList;
+
+	AudioSource ado;
 
 	public static GameManager instance;
 
@@ -59,6 +63,8 @@ public class GameManager : MonoBehaviour
 		float bestScore = PlayerPrefs.GetFloat("BestScore");
 		bestScoreText.text = "Best Score: " + (int)bestScore;
 
+		ado = GetComponent<AudioSource>();
+
 		RefreshBombText();
 		RefreshScore();
 
@@ -67,6 +73,19 @@ public class GameManager : MonoBehaviour
 			case 0: bossSpawnTime = 30f; break;
 			case 1: bossSpawnTime = 45f; break;
 			case 2: bossSpawnTime = 70f; break;
+		}
+
+		if (SceneManager.GetActiveScene().name == "Level_1")
+		{
+			stageNum = 0;
+		}
+		else if (SceneManager.GetActiveScene().name == "Level_2")
+		{
+			stageNum = 1;
+		}
+		else if (SceneManager.GetActiveScene().name == "Level_3")
+		{
+			stageNum = 2;
 		}
 
 		StartCoroutine(SpawnEnemyTimer());
@@ -87,13 +106,6 @@ public class GameManager : MonoBehaviour
 				}
 			}
 
-			if (isBossCleared)
-			{
-				//SceneManager.LoadScene(스테이지 if문이나 switch로 어떻게);
-				isBossSpawned = false;
-				isBossCleared = false;
-			}
-
 		}
 		else
 		{
@@ -104,27 +116,49 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	public void BossClear()
+	{
+		isBossSpawned = false;
+		Debug.Log("보스클리어!");
+		UI.instance.BossHPBarOFF();
+
+		switch(stageNum)
+		{
+			case 0:
+				SceneManager.LoadScene("Level_2");
+				break;
+			case 1:
+				SceneManager.LoadScene("Level_3");
+				break;
+			case 2:
+				//GameClear();
+				break;
+		}
+	}
+
 	IEnumerator BossSpawnTimer()
 	{
 		while(!isBossSpawned && !isGameover)
 		{
 			if (stageTime > bossSpawnTime)
 			{
-				SpawnBossEnemy(stageNum);
+				SpawnBossEnemy();
 			}
 			yield return new WaitForSeconds(1f);
 		}
 	}
 
-	void SpawnBossEnemy(int stageNumber)
+	void SpawnBossEnemy()
 	{
 		isBossSpawned = true;
-		if (stageNumber == 0)
-		{
-			UI.instance.BossAlarmON();
-			//var Boss = Instantiate(bossPrefabs[stageNumber], BossSpawnPos.transform.position, Quaternion.identity);
-			//sound재생;
-		}
+
+		UI.instance.BossAlarmON();
+		BGMSwitch.instance.ChangeBGM();
+		var SpawnFX = Instantiate(bossFX, bossSpawnPos.transform.position + Vector3.up * 5f, Quaternion.identity);
+		Destroy(SpawnFX, 5f);
+		Invoke("bossInstantiate", 3f);
+
+		//sound재생;
 
 		foreach (GameObject enemys in enemysList)
 		{
@@ -133,12 +167,19 @@ public class GameManager : MonoBehaviour
 		enemysList.Clear();
 	}
 
+	void bossInstantiate()
+	{
+		var boss = Instantiate(bossPrefabs[stageNum], bossSpawnPos.transform.position, Quaternion.identity);
+		boss.transform.LookAt(boss.transform.position + Vector3.back * 10f);
+	}
+
 	void Bomb()
 	{
 		bombCount--;
 		RefreshBombText();
 		var BombFX = Instantiate(bombEffect, bombPos.transform.position, Quaternion.identity);
 		Destroy(BombFX, 4f);
+		ado.Play();
 
 		foreach (GameObject bullets in enemyBulletsList)
 		{
@@ -147,7 +188,7 @@ public class GameManager : MonoBehaviour
 		enemyBulletsList.Clear();
 	}
 
-	void RefreshBombText()
+	public void RefreshBombText()
 	{
 		bombText.text = "Bomb: " + bombCount;
 	}
@@ -171,7 +212,7 @@ public class GameManager : MonoBehaviour
 	void SpawnEnemy()
 	{
 		int randomEnemy = Random.Range(0, 3);
-		int randomPos = Random.Range(0, 6);
+		int randomPos = Random.Range(0, 8);
 
 		if (randomPos < 4)
 		{
@@ -189,12 +230,20 @@ public class GameManager : MonoBehaviour
 		{
 			StartCoroutine(EnemySpawnPattern0("Left", 5));
 		}
-		// 6,7은 아직 구상중!
+		else if (randomPos == 6)
+		{
+			StartCoroutine(EnemySpawnPattern0("Right", 6));
+		}
+		else if (randomPos == 7)
+		{
+			StartCoroutine(EnemySpawnPattern0("Left", 7));
+		}
 	}
 
 	IEnumerator EnemySpawnPattern0(string moveDirection, int posIndex)
 	{
-		for (int i = 0; i < 5; i++)
+		int Howmuch = Random.Range(2, 7);
+		for (int i = 0; i < Howmuch; i++)
 		{
 			var mob = Instantiate(enemyPrefabs[0], enemySpawnPositions[posIndex].transform.position, Quaternion.identity);
 			var rigid = mob.GetComponent<Rigidbody>();
@@ -202,7 +251,7 @@ public class GameManager : MonoBehaviour
 			rigid.velocity = new Vector3((moveDirection == "Right" ? 1f : -1f) * mob.GetComponent<Enemy>().speed, 0f, 0f);
 			mob.transform.LookAt(new Vector3(mob.transform.position.x + 10f * (moveDirection == "Right" ? 1f : -1f), mob.transform.position.y, mob.transform.position.z));
 
-			yield return new WaitForSeconds(0.5f);
+			yield return new WaitForSeconds(0.7f);
 		}
 	}
 

@@ -898,10 +898,10 @@ MonoBehaviour:
   speed: 7
   life: 125
   maxLife: 125
-  score: 10
+  score: 20
   hpBar: {fileID: 8341385680903828867}
   canAttack: 1
-  AttackCooldown: 3
+  AttackCooldown: 2
 --- !u!114 &8983263150808814151
 MonoBehaviour:
   m_ObjectHideFlags: 0
