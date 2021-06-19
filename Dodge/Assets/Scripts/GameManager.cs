@@ -16,17 +16,22 @@ public class GameManager : MonoBehaviour
 	public GameObject gameoverText;
 	public Text scoreText;
 	public Text bestScoreText;
+	public Text bombText;
 
-	[Header("적 프리팹 모음")]
+	[Header("프리팹 모음")]
 	public GameObject[] enemyPrefabs;
 	public GameObject[] enemySpawnPositions;
 	public GameObject[] bossPrefabs;
+	public GameObject bombPos;
 
 	[Header("몬스터가 사용하는 총알")]
 	public GameObject enemyBulletPrefab;
 
 	[Header("현재 점수")]
 	public float currentScore = 0f;
+
+	[Header("이펙트 프리팹")]
+	public GameObject bombEffect;
 
 	float spawnTime = 2f;
 	float stageTime = 0f;
@@ -36,10 +41,11 @@ public class GameManager : MonoBehaviour
 	
 	bool isGameover = false;
 	bool isBossSpawned = false;
-	bool isBossCleared = false;
+	[HideInInspector] public bool isBossCleared = false;
 
-	public List<GameObject> enemyBulletsList;
-	public List<GameObject> enemysList;
+
+	[HideInInspector] public List<GameObject> enemyBulletsList;
+	[HideInInspector] public List<GameObject> enemysList;
 
 	public static GameManager instance;
 
@@ -52,6 +58,9 @@ public class GameManager : MonoBehaviour
 	{
 		float bestScore = PlayerPrefs.GetFloat("BestScore");
 		bestScoreText.text = "Best Score: " + (int)bestScore;
+
+		RefreshBombText();
+		RefreshScore();
 
 		switch (stageNum)
 		{
@@ -74,7 +83,6 @@ public class GameManager : MonoBehaviour
 			{
 				if (bombCount > 0)
 				{
-					bombCount--;
 					Bomb();
 				}
 			}
@@ -110,13 +118,14 @@ public class GameManager : MonoBehaviour
 
 	void SpawnBossEnemy(int stageNumber)
 	{
+		isBossSpawned = true;
 		if (stageNumber == 0)
 		{
+			UI.instance.BossAlarmON();
 			//var Boss = Instantiate(bossPrefabs[stageNumber], BossSpawnPos.transform.position, Quaternion.identity);
 			//sound재생;
 		}
 
-		// 보스 소환 시 일반몹 제거
 		foreach (GameObject enemys in enemysList)
 		{
 			Destroy(enemys);
@@ -126,11 +135,21 @@ public class GameManager : MonoBehaviour
 
 	void Bomb()
 	{
-		foreach(GameObject bullets in enemyBulletsList)
+		bombCount--;
+		RefreshBombText();
+		var BombFX = Instantiate(bombEffect, bombPos.transform.position, Quaternion.identity);
+		Destroy(BombFX, 4f);
+
+		foreach (GameObject bullets in enemyBulletsList)
 		{
 			Destroy(bullets);
 		}
 		enemyBulletsList.Clear();
+	}
+
+	void RefreshBombText()
+	{
+		bombText.text = "Bomb: " + bombCount;
 	}
 
 	public void RefreshScore()
@@ -140,7 +159,7 @@ public class GameManager : MonoBehaviour
 
 	IEnumerator SpawnEnemyTimer()
 	{
-		float RanSpawnTime = Random.Range(spawnTime - 1f, spawnTime + 1f);
+		float RanSpawnTime;
 		while(!isGameover && stageTime < bossSpawnTime)
 		{
 			SpawnEnemy();
@@ -158,7 +177,9 @@ public class GameManager : MonoBehaviour
 		{
 			var mob = Instantiate(enemyPrefabs[randomEnemy], enemySpawnPositions[randomPos].transform.position, Quaternion.identity);
 			var rigid = mob.GetComponent<Rigidbody>();
+
 			rigid.velocity = new Vector3(0f, 0f, mob.GetComponent<Enemy>().speed * -1f);
+			mob.transform.LookAt(new Vector3(mob.transform.position.x, mob.transform.position.y, mob.transform.position.z - 10f));
 		}
 		else if (randomPos == 4)
 		{
@@ -173,13 +194,13 @@ public class GameManager : MonoBehaviour
 
 	IEnumerator EnemySpawnPattern0(string moveDirection, int posIndex)
 	{
-		Transform target = FindObjectOfType<PlayerController>().transform;
 		for (int i = 0; i < 5; i++)
 		{
 			var mob = Instantiate(enemyPrefabs[0], enemySpawnPositions[posIndex].transform.position, Quaternion.identity);
 			var rigid = mob.GetComponent<Rigidbody>();
 
 			rigid.velocity = new Vector3((moveDirection == "Right" ? 1f : -1f) * mob.GetComponent<Enemy>().speed, 0f, 0f);
+			mob.transform.LookAt(new Vector3(mob.transform.position.x + 10f * (moveDirection == "Right" ? 1f : -1f), mob.transform.position.y, mob.transform.position.z));
 
 			yield return new WaitForSeconds(0.5f);
 		}
