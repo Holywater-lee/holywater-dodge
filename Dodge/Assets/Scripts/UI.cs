@@ -7,6 +7,7 @@ public class UI : MonoBehaviour
 	public static UI instance;
 
 	public GameObject BossHPBar;
+	public GameObject GameClearUI;
 
 	Animator anim;
 
@@ -18,6 +19,12 @@ public class UI : MonoBehaviour
 	void Start()
 	{
 		anim = GetComponent<Animator>();
+	}
+
+	public void GameClear()
+	{
+		anim.SetBool("isGameClear", true);
+		FindObjectOfType<PlayerController>().GetHeal(100);
 	}
 
 	public void BossAlarmON()

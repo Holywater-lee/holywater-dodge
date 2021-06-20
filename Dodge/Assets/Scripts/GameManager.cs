@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
 	{
 		float bestScore = PlayerPrefs.GetFloat("BestScore");
 		bestScoreText.text = "Best Score: " + (int)bestScore;
+		currentScore = Init.instance.score;
 
 		ado = GetComponent<AudioSource>();
 
@@ -111,7 +112,8 @@ public class GameManager : MonoBehaviour
 		{
 			if (Input.GetKeyDown(KeyCode.R))
 			{
-				SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+				Init.instance.score = 0;
+				SceneManager.LoadScene("Level_1");
 			}
 		}
 	}
@@ -121,8 +123,9 @@ public class GameManager : MonoBehaviour
 		isBossSpawned = false;
 		Debug.Log("보스클리어!");
 		UI.instance.BossHPBarOFF();
+		Init.instance.score = currentScore;
 
-		switch(stageNum)
+		switch (stageNum)
 		{
 			case 0:
 				SceneManager.LoadScene("Level_2");
@@ -131,7 +134,7 @@ public class GameManager : MonoBehaviour
 				SceneManager.LoadScene("Level_3");
 				break;
 			case 2:
-				//GameClear();
+				UI.instance.GameClear();
 				break;
 		}
 	}
